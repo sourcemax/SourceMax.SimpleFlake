@@ -50,6 +50,34 @@ namespace SourceMax.SimpleFlake.Tests.Base58 {
             this.TestFlakeBase58String(Int64.MaxValue, "1NQm6nKp8qFC");
         }
 
+        [TestMethod]
+        public void Create_WithTwoSequentialValues_GeneratesSortdedIDs() {
+
+            // Arrange
+            var seed = 123456;
+
+            // Act
+            var id1 = Flake.Create<Me.Flake>(seed).ToString();
+            var id2 = Flake.Create<Me.Flake>(seed + 1).ToString();
+
+            // Assert
+            Assert.IsTrue(String.Compare(id1, id2, StringComparison.Ordinal) < 0);
+        }
+
+        [TestMethod]
+        public void Create_WithTheSameNumber_GeneratesIdenticalIDs() {
+
+            // Arrange
+            var seed = 123456;
+
+            // Act
+            var id1 = Flake.Create<Me.Flake>(seed).ToString();
+            var id2 = Flake.Create<Me.Flake>(seed).ToString();
+
+            // Assert
+            Assert.IsTrue(String.Compare(id1, id2, StringComparison.Ordinal) == 0);
+        }
+
         private void TestFlakeBase58String(BigInteger value, string targetString) {
             
             // Arrange
